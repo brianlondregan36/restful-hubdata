@@ -2,9 +2,9 @@ import json, requests
 from passwords import clientid, clientsecret
 
 
-
-eventTableID = 9 
-scheduledEventTableID = 10
+HUB_ID = 170233
+EVENT_TABLE = 9 
+SCHEDULEDEVENT_TABLE = 10
 
 def ConfirmitAuthenticate():
     endpoint = "https://author.testlab.firmglobal.net/identity/connect/token"
@@ -20,49 +20,45 @@ def ConfirmitAuthenticate():
 def GetTables():
     global eventTableID, scheduledEventTableID 
     access_token = ConfirmitAuthenticate()
-    url = "https://ws.testlab.firmglobal.net/v1/hubs/170233/tables/"
+    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/"
     req = requests.get(url, headers={"authorization": access_token})
     if req.status_code == 200: 
         resp = json.loads(req.text)
         items = resp["items"]
         for item in items: 
+            #could grab links to each table self and links to each table records but not reliable yet
             if item["name"] == "Event": 
-                eventTableID = item["id"]
+                EVENT_TABLE = item["id"]
             elif item["name"] == "ScheduledEvent": 
-                scheduledEventTableID = item["id"]
-    # could grab links to each table self and links to each table records but not reliable yet
+                SCHEDULEDEVENT_TABLE = item["id"]
     else: 
         return None
 
 def GetEvent(event):
     access_token = ConfirmitAuthenticate()
-    url = "https://ws.testlab.firmglobal.net/v1/hubs/170233/tables/" + str(eventTableID) + "/records/" + str(event["eventCode"])
+    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(EVENT_TABLE) + "/records/" + str(event["eventCode"]) #ISSUE.. the eventCode isn't the resource used in the URL!!!
     req = requests.get(url, headers={"authorization": access_token})
     if req.status_code == 200:
         resp = json.loads(req.text)
         links = resp["links"]
         self = links["self"]
         print("EVENT FOUND: " + str(self))
-    elif req.status_code == 404:
-        CreateEvent(event)
-    else:
-        return None
+    return req.status_code
 
 def CreateEvent(event):
     access_token = ConfirmitAuthenticate()
-    url = "https://ws.testlab.firmglobal.net/v1/hubs/170233/tables/" + str(eventTableID) + "/records" 
+    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(EVENT_TABLE) + "/records" 
     req = requests.post(url, data=json.dumps(event), headers={"Content-Type": "application/json", "authorization": access_token})
     if req.status_code == 201: 
         resp = json.loads(req.text)
         links = resp["links"]
         self = links["self"]
         print("EVENT CREATED: " + str(self))
-    else: 
-        return None
+    return req.status_code
 
 def UpdateScheduledEvents(events):
     access_token = ConfirmitAuthenticate()
-    url = "https://ws.testlab.firmglobal.net/v1/hubs/170233/tables/" + str(scheduledEventTableID) + "/records"
+    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(SCHEDULEDEVENT_TABLE) + "/records"
     req = requests.put(url, data=json.dumps(events), headers={"Content-Type": "application/json", "authorization": access_token})
     if req.status_code == 204: 
         print("SCHEDULED EVENTS UPDATED")
@@ -73,7 +69,9 @@ def UpdateScheduledEvents(events):
 
 
 ## UNIT TESTING ##
-
-GetTables()
-events = [{"id": "1", "eventCode": "1", "name": "Monthly Sweet Treat", "date": "02/14/2019", "status": "Completed", "budget": 60.00, "actual": 58.53, "invite": "Yes", "attendance": 15}, {"id": "3", "eventCode": "4", "name": "Quarterly Poker Night", "date": "02/28/2019", "status": "Completed", "budget": 200.00, "actual": 185.33, "invite": "Yes", "attendance": 14}]
-UpdateScheduledEvents(events)
+#e = {"eventCode": "4"}
+#stat = GetEvent(e)
+#print(stat)
+#GetTables()
+#events = [{"id": "1", "eventCode": "1", "name": "Monthly Sweet Treat", "date": "02/14/2019", "status": "Completed", "budget": 60.00, "actual": 58.53, "invite": "Yes", "attendance": 15}, {"id": "3", "eventCode": "4", "name": "Quarterly Poker Night", "date": "02/28/2019", "status": "Completed", "budget": 200.00, "actual": 185.33, "invite": "Yes", "attendance": 14}]
+#UpdateScheduledEvents(events)
