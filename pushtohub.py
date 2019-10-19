@@ -26,23 +26,33 @@ def GetTables():
         resp = json.loads(req.text)
         items = resp["items"]
         for item in items: 
-            #could grab links to each table self and links to each table records but not reliable yet
             if item["name"] == "Event": 
                 EVENT_TABLE = item["id"]
             elif item["name"] == "ScheduledEvent": 
                 SCHEDULEDEVENT_TABLE = item["id"]
-    else: 
-        return None
+    return req.status_code
 
 def GetEvent(event):
     access_token = ConfirmitAuthenticate()
-    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(EVENT_TABLE) + "/records/" + str(event["eventCode"]) #ISSUE.. the eventCode isn't the resource used in the URL!!!
+    url = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(EVENT_TABLE) + "/records"
     req = requests.get(url, headers={"authorization": access_token})
     if req.status_code == 200:
         resp = json.loads(req.text)
-        links = resp["links"]
-        self = links["self"]
-        print("EVENT FOUND: " + str(self))
+        allEvents = resp["items"]
+        resource = ""
+        if len(allEvents) > 0:
+            eventCode = event['eventCode'] 
+            for e in allEvents: 
+                thisCode = e['fieldValues']['eventCode']
+                if thisCode == eventCode: 
+                    resource = "https://ws.testlab.firmglobal.net/v1/hubs/" + str(HUB_ID) + "/tables/" + str(EVENT_TABLE) + "/records/" + str(e['id'])
+                    break
+        if resource != "":     
+            print("EVENT FOUND AT: " + resource)    
+            return resource
+        else: 
+            print("EVENT NOT FOUND")
+            return None
     return req.status_code
 
 def CreateEvent(event):
@@ -62,14 +72,13 @@ def UpdateScheduledEvents(events):
     req = requests.put(url, data=json.dumps(events), headers={"Content-Type": "application/json", "authorization": access_token})
     if req.status_code == 204: 
         print("SCHEDULED EVENTS UPDATED")
-    else: 
-        return None
+    return req.status_code
 
 
 
 
 ## UNIT TESTING ##
-#e = {"eventCode": "4"}
+#e = {"eventCode": "42"}
 #stat = GetEvent(e)
 #print(stat)
 #GetTables()
