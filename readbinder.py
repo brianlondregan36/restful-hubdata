@@ -51,11 +51,7 @@ def main():
                 if eventUrl or status == 201: 
                   se = {"id": index, "name": row[2], "eventCode": row[1], "date": row[4], "status": row[6], "budget": row[8], "actual": row[9], "invite": row[11], "attendance": row[12]}
                   scheduledEvents.append(se)
-        #pushtohub.UpdateScheduledEvents(scheduledEvents)
-        print(str(len(scheduledEvents)))
-        for ev in scheduledEvents: 
-            print(str(ev))
-
+        result = pushtohub.UpdateScheduledEvents(scheduledEvents)
 
 if __name__ == '__main__':
     main()

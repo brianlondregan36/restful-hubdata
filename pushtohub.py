@@ -82,5 +82,5 @@ def UpdateScheduledEvents(events):
 #stat = GetEvent(e)
 #print(stat)
 #GetTables()
-#events = [{"id": "1", "eventCode": "1", "name": "Monthly Sweet Treat", "date": "02/14/2019", "status": "Completed", "budget": 60.00, "actual": 58.53, "invite": "Yes", "attendance": 15}, {"id": "3", "eventCode": "4", "name": "Quarterly Poker Night", "date": "02/28/2019", "status": "Completed", "budget": 200.00, "actual": 185.33, "invite": "Yes", "attendance": 14}]
+#events = [{"id": "1", "eventCode": "1", "name": "Monthly Sweet Treat", "date": "02/14/2019", "status": "Completed", "budget": 100.00, "actual": 58.53, "invite": "Yes", "attendance": 100}, {"id": "3", "eventCode": "4", "name": "Quarterly Poker Night", "date": "02/28/2019", "status": "Completed", "budget": 100.00, "actual": 185.33, "invite": "Yes", "attendance": 100}]
 #UpdateScheduledEvents(events)
