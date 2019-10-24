@@ -43,7 +43,7 @@ def main():
         for index, row in enumerate(values):
             if index == 0: 
                 headers = row 
-            elif index < 2: 
+            elif index < 57: 
                 e = {
                     "eventCode": row[0], 
                     "name": row[1], 
@@ -54,8 +54,8 @@ def main():
                 if eventUrl == None: 
                     status = pushtohub.CreateEvent(e)
                 if eventUrl or status == 201: 
-                    budget = float(row[9].replace('$', ''))
-                    actual = float(row[10].replace('$', ''))
+                    budget = float(row[9].replace('$', '').replace(',', ''))
+                    actual = float(row[10].replace('$', '').replace(',', ''))
                     attendance = int(row[13]) if len(row) > 13 else 0
                     se = {
                         "id": index, 
