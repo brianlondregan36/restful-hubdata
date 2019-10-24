@@ -44,18 +44,36 @@ def main():
             if index == 0: 
                 headers = row 
             elif index < 2: 
-                e = {"eventCode": row[1], "name": row[2], "type": row[0], "description": row[3]}
+                e = {
+                    "eventCode": row[0], 
+                    "name": row[1], 
+                    "type": row[2], 
+                    "description": row[4]
+                }
                 eventUrl = pushtohub.GetEvent(e)
                 if eventUrl == None: 
                     status = pushtohub.CreateEvent(e)
                 if eventUrl or status == 201: 
-                    budget = float(row[8].replace('$', ''))
-                    actual = float(row[9].replace('$', ''))
-                    attendance = int(row[12])
-                    se = {"id": index, "eventCode": row[1], "name": row[2], "date": row[4], "status": row[6], "budget": budget, "actual": actual, "invite": row[11], "attendance": attendance}
+                    budget = float(row[9].replace('$', ''))
+                    actual = float(row[10].replace('$', ''))
+                    attendance = int(row[13]) if len(row) > 13 else 0
+                    se = {
+                        "id": index, 
+                        "eventCode": row[0], 
+                        "name": row[3], 
+                        "date": row[5], 
+                        "status": row[7],
+                        "budget": budget,
+                        "actual": actual, 
+                        "inviteSent": row[12],
+                        "attendenceCount": attendance
+                    }
                     scheduledEvents.append(se)
+                    print(str(se))
+        
         if len(scheduledEvents) > 0:        
             result = pushtohub.UpdateScheduledEvents(scheduledEvents)
+            print(str(result))
 
 if __name__ == '__main__':
     main()

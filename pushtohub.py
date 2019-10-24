@@ -2,8 +2,8 @@ import json, requests
 from passwords import clientid, clientsecret
 
 
-HUB_ID = 170233
-EVENT_TABLE = 9 
+HUB_ID = 176044
+EVENT_TABLE = 1 
 SCHEDULEDEVENT_TABLE = 10
 
 def ConfirmitAuthenticate():
@@ -75,12 +75,3 @@ def UpdateScheduledEvents(events):
     return req.status_code
 
 
-
-
-## UNIT TESTING ##
-#e = {"eventCode": "42"}
-#stat = GetEvent(e)
-#print(stat)
-#GetTables()
-#events = [{"id": "1", "eventCode": "1", "name": "Monthly Sweet Treat", "date": "02/14/2019", "status": "Completed", "budget": 100.00, "actual": 58.53, "invite": "Yes", "attendance": 100}, {"id": "3", "eventCode": "4", "name": "Quarterly Poker Night", "date": "02/28/2019", "status": "Completed", "budget": 100.00, "actual": 185.33, "invite": "Yes", "attendance": 100}]
-#UpdateScheduledEvents(events)
