@@ -56,7 +56,7 @@ def main():
                 if eventUrl or status == 201: 
                     budget = float(row[9].replace('$', '').replace(',', ''))
                     actual = float(row[10].replace('$', '').replace(',', ''))
-                    attendance = int(row[13]) if len(row) > 13 else 0
+                    attendance = int(row[13]) if len(row) > 13 and row[13] != 'TBD' else 0
                     se = {
                         "id": index, 
                         "eventCode": row[0], 
