@@ -66,14 +66,12 @@ def main():
                         "budget": budget,
                         "actual": actual, 
                         "inviteSent": row[12],
-                        "attendenceCount": attendance
+                        "attendanceCount": attendance
                     }
                     scheduledEvents.append(se)
-                    print(str(se))
         
         if len(scheduledEvents) > 0:        
             result = pushtohub.UpdateScheduledEvents(scheduledEvents)
-            print(str(result))
 
 if __name__ == '__main__':
     main()
